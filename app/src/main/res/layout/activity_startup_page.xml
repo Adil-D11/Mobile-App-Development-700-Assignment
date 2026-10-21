@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/blue_gradient"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StartupPage">
+
+
+    <TextView
+        android:id="@+id/BodyTextView"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:text="SMART PANTRY MANAGER"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/LoginRegImg"
+        android:layout_width="370dp"
+        android:layout_height="170dp"
+        android:src="@drawable/startup_logo_2"
+        android:scaleType="fitCenter"
+        android:layout_marginTop="-21dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/BodyTextView"/>
+
+    <LinearLayout
+        android:id="@+id/Login"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/rounded_borders"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.5">
+
+    <TextView
+        android:id="@+id/LoginRegtxt"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:text="LOGIN OR REGISTER"
+        android:textSize="21sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="16dp"
+        />
+
+        <TextView
+            android:id="@+id/Logintxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Already have an account?"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            android:gravity="center"
+            android:padding="16dp"
+            />
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="130dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="-15dp"
+            android:text="Login"
+            android:textSize="20sp"
+            android:backgroundTint="#2196C4"
+            />
+
+        <TextView
+            android:id="@+id/Regtxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Don't have an account?"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            android:gravity="center"
+            android:padding="16dp"
+            android:layout_marginTop="20dp"
+            />
+
+        <Button
+            android:id="@+id/btnReg"
+            android:layout_width="130dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="-15dp"
+            android:text="Register"
+            android:textSize="20sp"
+            android:backgroundTint="#2196C4"
+            />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

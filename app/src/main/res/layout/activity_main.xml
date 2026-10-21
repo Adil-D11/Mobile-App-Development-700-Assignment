@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/toolbar_background"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="2dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!--
+        android:textSize - Changes size of text
+        android:gravity - centers the text
+        -->
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="HOME"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:layout_marginStart="100dp"
+            android:layout_marginEnd="100dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/BodyTextView"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:text="SMART PANTRY MANAGER"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        />
+
+    <TextView
+        android:id="@+id/SloganTextView"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:text="&quot;Food must never be wasted.&quot;"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/BodyTextView"
+        />
+
+    <ImageView
+        android:id="@+id/GenerateRecipeImg"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:src="@drawable/generate_recipe"
+        android:scaleType="fitCenter"
+        android:layout_marginTop="-28dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/SloganTextView"/>
+
+    <Button
+        android:id="@+id/buttonGenerateRecipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="-76dp"
+        android:text="Generate Recipe"
+        android:textSize="20sp"
+        android:backgroundTint="#2196C4"
+        android:scaleType="fitCenter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/GenerateRecipeImg"/>
+
+
+    <LinearLayout
+        android:id="@+id/navbar"
+        android:layout_width="0dp"
+        android:layout_height="110dp"
+        android:background="@color/toolbar_background"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" >
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center">
+
+    <ImageButton
+        android:id="@+id/ImgBtnHelp"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+        android:contentDescription="Help"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/helpicon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Help"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"/>
+
+        </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/ImgBtnPrevRecipes"
+            android:layout_width="120dp"
+            android:layout_height="80dp"
+            android:contentDescription="PrevRecipes"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/recipeicon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Previous Recipes"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/ImgBtnSettings"
+            android:layout_width="120dp"
+            android:layout_height="80dp"
+            android:contentDescription="Settings"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/settingsicon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

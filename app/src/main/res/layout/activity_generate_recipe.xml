@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GenerateRecipe">
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/toolbar_background"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="2dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+    <TextView
+        android:id="@+id/IngredientsTextView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="What Ingredients do you have?"
+        android:textSize="27sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+        <TextView
+            android:id="@+id/IngredientsSubTextView"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Select everything you have available or search for it"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+    </LinearLayout>
+
+    <!--LinearLayout for the body of app-->
+    <LinearLayout
+        android:id="@+id/GenerateBodyText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="2dp"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/GenerateRecipebtn">
+
+        <!--LinearLayout for the search bar -->
+        <LinearLayout
+            android:id="@+id/searchContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/searchIcon"
+                android:layout_width="24dp"
+                android:layout_height="23dp"
+                android:src="@drawable/search_icon"
+                android:contentDescription="Search"
+                android:scaleType="fitCenter" />
+
+            <EditText
+                android:id="@+id/editSearchbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Search Ingredients"
+                android:inputType="text"
+                android:singleLine="true"
+                android:paddingStart= "10dp"
+                android:paddingEnd= "5dp"
+                android:textColor="@android:color/black"
+                android:textColorHint="#757575"
+                android:background="@android:color/transparent"/>
+        </LinearLayout>
+
+        <!--LinearLayout for the checkboxes -->
+    <LinearLayout
+        android:id="@+id/IngredientChkbox1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <CheckBox
+            android:id="@+id/chkTomato"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tomato"
+            android:textSize="18dp"
+            android:layout_marginEnd="84dp"
+            android:layout_marginStart="50dp"/>
+
+        <CheckBox
+            android:id="@+id/chkOnion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="Onion" />
+
+    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/IngredientChkbox2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+
+            <CheckBox
+                android:id="@+id/chkPotato"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:text="Potato"
+                android:layout_marginEnd="109dp"
+                android:layout_marginStart="50dp"/>
+
+            <CheckBox
+                android:id="@+id/chkEggs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Eggs"
+                android:textSize="18dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/IngredientChkbox3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <CheckBox
+                android:id="@+id/chkMilk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Milk"
+                android:textSize="18dp"
+                android:layout_marginEnd="114dp"
+                android:layout_marginStart="50dp"/>
+
+            <CheckBox
+                android:id="@+id/chkCheese"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:text="Cheese" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/IngredientChkbox4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+
+
+            <CheckBox
+                android:id="@+id/chkRice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:text="Rice"
+                android:layout_marginEnd="109dp"
+                android:layout_marginStart="50dp"/>
+
+            <CheckBox
+                android:id="@+id/chkPasta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pasta"
+                android:textSize="18dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/IngredientChkbox5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+
+
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/selectedIngredientsScroll"
+            android:layout_width="match_parent"
+            android:layout_height="250dp">
+
+            <LinearLayout
+                android:id="@+id/selectedIngredientsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/SelectedIngredientsTxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:text="Your Selected Ingredients:"
+                    android:textSize="18sp"
+                    android:textStyle="italic"
+                    android:layout_marginTop="20dp"/>
+
+            </LinearLayout>
+        </ScrollView>
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/GenerateRecipebtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Generate Recipe"
+        android:textSize="20sp"
+        android:backgroundTint="#2196C4"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
