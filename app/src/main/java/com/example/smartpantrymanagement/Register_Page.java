@@ -10,7 +10,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.widget.EditText;
+import android.widget.Toast;
+import android.util.Patterns;
+
 public class Register_Page extends AppCompatActivity {
+
+    private EditText Email;
+    private EditText Username;
+    private EditText Password;
+    private EditText ConPassword;
 
     private void OpenActivity(Class activity){
         Intent intent = new Intent(this,activity);
@@ -21,7 +30,41 @@ public class Register_Page extends AppCompatActivity {
 
     private void initRegBtn(){
         Button RegBtn = findViewById(R.id.btnReg);
+
+        Email = findViewById(R.id.editEmail);
+        Username = findViewById(R.id.editUsername);
+        Password = findViewById(R.id.editPassword);
+        ConPassword = findViewById(R.id.editConPassword);
+
         RegBtn.setOnClickListener(view->{
+            String email = Email.getText().toString().trim();
+            String username = Username.getText().toString().trim();
+            String password = Password.getText().toString().trim();
+            String conPassword = ConPassword.getText().toString().trim();
+
+            if(email.isEmpty() || username.isEmpty() || password.isEmpty() || conPassword.isEmpty()){
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                Email.setError("Enter valid email address");
+                Email.requestFocus();
+                return;
+            }
+
+            if(password.length() < 8){
+                Password.setError("Password needs to be 8 characters or more");
+                Password.requestFocus();
+                return;
+            }
+
+            if(!password.equals(conPassword)){
+                ConPassword.setError("Passwords do not match");
+                ConPassword.requestFocus();
+                return;
+            }
+
             OpenActivity(MainActivity.class);
         });
     }

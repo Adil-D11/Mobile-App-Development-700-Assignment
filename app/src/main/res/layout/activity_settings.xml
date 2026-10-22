@@ -125,12 +125,12 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
-        android:id="@+id/resetPasswordButton"
+        android:id="@+id/changePasswordButton"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:backgroundTint="#2196C4"
-        android:text="Reset Password"
+        android:text="Change Password"
         app:layout_constraintTop_toBottomOf="@id/changeEmailButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -142,7 +142,7 @@
         android:layout_marginTop="8dp"
         android:backgroundTint="#2196C4"
         android:text="Sign Out"
-        app:layout_constraintTop_toBottomOf="@id/resetPasswordButton"
+        app:layout_constraintTop_toBottomOf="@id/changePasswordButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
