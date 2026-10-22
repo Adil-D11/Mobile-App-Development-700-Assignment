@@ -46,7 +46,7 @@
         <LinearLayout
             android:id="@+id/recipeContainer"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -82,15 +82,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginBottom="20dp">
-
-                <TextView
-                    android:id="@+id/recipeInstructions"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Cooking Instructions"
-                    android:textSize="16sp"
-                    android:layout_marginBottom="8dp"
-                    android:lineSpacingExtra="4dp"/>
 
             </LinearLayout>
 
