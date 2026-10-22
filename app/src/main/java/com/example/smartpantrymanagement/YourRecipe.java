@@ -1,6 +1,8 @@
 package com.example.smartpantrymanagement;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +11,19 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class YourRecipe extends AppCompatActivity {
+
+    private void OpenActivity(Class activity){
+        Intent intent = new Intent(this,activity);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    private void initRecipeGen(){
+        Button YourRecipeBtn = findViewById(R.id.DoneRecipebtn);
+        YourRecipeBtn.setOnClickListener(view->{
+            OpenActivity(GenerateRecipe.class);
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,5 +35,6 @@ public class YourRecipe extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        initRecipeGen();
     }
 }

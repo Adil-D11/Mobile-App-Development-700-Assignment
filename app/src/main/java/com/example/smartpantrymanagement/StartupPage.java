@@ -1,6 +1,8 @@
 package com.example.smartpantrymanagement;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +11,26 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class StartupPage extends AppCompatActivity {
+
+    private void OpenActivity(Class activity){
+        Intent intent = new Intent(this,activity);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    private void initLoginPage(){
+        Button LogPgBtn = findViewById(R.id.btnLogin);
+        LogPgBtn.setOnClickListener(view->{
+            OpenActivity(LoginPage.class);
+        });
+    }
+
+    private void initRegisterPage(){
+        Button RegPgBtn = findViewById(R.id.btnReg);
+        RegPgBtn.setOnClickListener(view->{
+            OpenActivity(Register_Page.class);
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,5 +42,7 @@ public class StartupPage extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        initLoginPage();
+        initRegisterPage();
     }
 }

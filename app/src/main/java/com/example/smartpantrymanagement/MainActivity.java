@@ -23,28 +23,28 @@ public class MainActivity extends AppCompatActivity {
         //creating a button
         Button GererateRecipebtn = findViewById(R.id.buttonGenerateRecipe);
         GererateRecipebtn.setOnClickListener(view->{
-            OpenActivity(GenerateRecipePage.class);
+            OpenActivity(GenerateRecipe.class);
         });
     }
 
     private void initHelpBtn(){
         ImageButton ImgHelpBtn = findViewById(R.id.ImgBtnHelp);
         ImgHelpBtn.setOnClickListener(view->{
-            OpenActivity(HelpPage.class);
+            OpenActivity(Help.class);
         });
     }
 
     private void initPrevRecipeBtn(){
         ImageButton ImgPrevRecipeBtn = findViewById(R.id.ImgBtnPrevRecipes);
         ImgPrevRecipeBtn.setOnClickListener(view->{
-            OpenActivity(PreviousRecipesPage.class);
+            OpenActivity(PreviousRecipes.class);
         });
     }
 
     private void initSettingsBtn(){
         ImageButton ImgSettingsBtn = findViewById(R.id.ImgBtnSettings);
         ImgSettingsBtn.setOnClickListener(view->{
-            OpenActivity(SettingsPage.class);
+            OpenActivity(Settings.class);
         });
     }
 
