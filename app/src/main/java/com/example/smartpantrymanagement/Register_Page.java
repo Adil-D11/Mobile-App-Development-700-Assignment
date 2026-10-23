@@ -20,6 +20,7 @@ public class Register_Page extends AppCompatActivity {
     private EditText Username;
     private EditText Password;
     private EditText ConPassword;
+    private DBHelper dbHelper;
 
     private void OpenActivity(Class activity){
         Intent intent = new Intent(this,activity);
@@ -65,6 +66,19 @@ public class Register_Page extends AppCompatActivity {
                 return;
             }
 
+            long result = dbHelper.registerUser(username, email, password);
+
+            if (result == -1) {
+                Toast.makeText(this,
+                        "Username or email already exists",
+                        Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            Toast.makeText(this,
+                    "Registration successful!",
+                    Toast.LENGTH_SHORT).show();
+
             OpenActivity(MainActivity.class);
         });
     }
@@ -79,6 +93,7 @@ public class Register_Page extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        dbHelper = new DBHelper(this);
         initRegBtn();
     }
 }

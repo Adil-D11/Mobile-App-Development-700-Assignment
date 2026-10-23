@@ -18,6 +18,7 @@ public class LoginPage extends AppCompatActivity {
 
     private EditText Email;
     private EditText Password;
+    private DBHelper dbHelper;
 
     private void OpenActivity(Class activity){
         Intent intent = new Intent(this,activity);
@@ -35,7 +36,7 @@ public class LoginPage extends AppCompatActivity {
         LoginBtn.setOnClickListener(view->{
 
             String email = Email.getText().toString().trim();
-            String password = Password.getText().toString().trim();
+            String password = Password.getText().toString();
 
             if(email.isEmpty() || password.isEmpty()){
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
@@ -47,6 +48,19 @@ public class LoginPage extends AppCompatActivity {
                 Email.requestFocus();
                 return;
             }
+
+            boolean isValidUser = dbHelper.verifyUser(email, password);
+
+            if (!isValidUser) {
+                Toast.makeText(this,
+                        "Invalid email or password",
+                        Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            Toast.makeText(this,
+                    "Login successful!",
+                    Toast.LENGTH_SHORT).show();
 
             OpenActivity(MainActivity.class);
         });
@@ -63,6 +77,7 @@ public class LoginPage extends AppCompatActivity {
             return insets;
         });
 
+        dbHelper = new DBHelper(this);
         initLoginBtn();
     }
 }
