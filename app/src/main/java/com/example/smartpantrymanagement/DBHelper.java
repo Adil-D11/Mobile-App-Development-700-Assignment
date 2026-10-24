@@ -20,6 +20,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(Context context){super(context, DATABASE_NAME, null, DATABASE_VERSION);}
 
+
     private static final String CREATE_TABLE_USERS =
             "CREATE TABLE Users (" +
                     "UserID INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -164,6 +165,29 @@ public class DBHelper extends SQLiteOpenHelper {
                         String.valueOf(userId),
                         ingredientName
                 }
+        );
+    }
+
+    public long saveRecipeHistory(long userId, String recipeName, String ingredients) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("UserID", userId);
+        values.put("RecipeName", recipeName);
+        values.put("Ingredients", ingredients);
+
+        return db.insert("RecipeHistory", null, values);
+    }
+
+    public Cursor getRecipeHistory(long userId) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        return db.rawQuery(
+                "SELECT RecipeID, RecipeName, Ingredients " +
+                        "FROM RecipeHistory " +
+                        "WHERE UserID = ? " +
+                        "ORDER BY RecipeID DESC",
+                new String[]{String.valueOf(userId)}
         );
     }
 

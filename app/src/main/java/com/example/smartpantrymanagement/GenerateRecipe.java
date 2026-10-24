@@ -82,7 +82,12 @@ public class GenerateRecipe extends AppCompatActivity {
                 return;
             }
 
-            OpenActivity(YourRecipe.class);
+            Intent intent = new Intent(GenerateRecipe.this, YourRecipe.class);
+            intent.putStringArrayListExtra(
+                    "selectedIngredients",
+                    new ArrayList<>(selectedIngredients)
+            );
+            startActivity(intent);
         });
     }
 
