@@ -41,7 +41,3 @@ The SQLite database is managed by the application. Users can register an account
 - Previous recipe history
 - Help page explaining the application
 - Settings for account management and preferences
-
-## Developer
-
-Developed as part of a Mobile Application Development assignment.
