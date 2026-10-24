@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.util.Patterns;
 
+import android.content.SharedPreferences;
+
 public class Register_Page extends AppCompatActivity {
 
     private EditText Email;
@@ -74,6 +76,11 @@ public class Register_Page extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
                 return;
             }
+
+            SharedPreferences preferences =
+                    getSharedPreferences("SmartPantrySession", MODE_PRIVATE);
+
+            preferences.edit().putLong("UserID", result).apply();
 
             Toast.makeText(this,
                     "Registration successful!",

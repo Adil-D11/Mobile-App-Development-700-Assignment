@@ -61,22 +61,24 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean verifyUser(String email, String password) {
+
+    public long getUserId(String email, String password) {
         SQLiteDatabase db = getReadableDatabase();
 
         try (Cursor cursor = db.rawQuery(
-                "SELECT PasswordHash FROM Users WHERE Email = ?",
+                "SELECT UserID, PasswordHash FROM Users WHERE Email = ?",
                 new String[]{email})) {
 
             if (!cursor.moveToFirst()) {
-                return false;
+                return -1;
             }
 
-            String storedPasswordHash = cursor.getString(0);
+            long userId = cursor.getLong(0);
+            String storedPasswordHash = cursor.getString(1);
             String[] parts = storedPasswordHash.split(":", 2);
 
             if (parts.length != 2) {
-                return false;
+                return -1;
             }
 
             byte[] salt = Base64.decode(parts[0], Base64.NO_WRAP);
@@ -92,15 +94,20 @@ public class DBHelper extends SQLiteOpenHelper {
 
             spec.clearPassword();
 
-            return MessageDigest.isEqual(expectedHash, enteredPasswordHash);
+            if (MessageDigest.isEqual(expectedHash, enteredPasswordHash)) {
+                return userId;
+            }
+
+            return -1;
 
         } catch (GeneralSecurityException e) {
             throw new IllegalStateException(
                     "Unable to verify password", e);
         } catch (IllegalArgumentException e) {
-            return false;
+            return -1;
         }
     }
+
 
 
     private String hashPassword(String password) {
@@ -124,6 +131,40 @@ public class DBHelper extends SQLiteOpenHelper {
         } catch (GeneralSecurityException e) {
             throw new IllegalStateException("Unable to hash password", e);
         }
+    }
+
+    public long addIngredient(long userId, String ingredientName) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("UserID", userId);
+        values.put("IngredientName", ingredientName);
+
+        return db.insert("PantryIngredients", null, values);
+    }
+
+    public Cursor getPantryIngredients(long userId) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        return db.rawQuery(
+                "SELECT IngredientID, IngredientName " +
+                        "FROM PantryIngredients WHERE UserID = ? " +
+                        "ORDER BY IngredientName COLLATE NOCASE",
+                new String[]{String.valueOf(userId)}
+        );
+    }
+
+    public int deleteIngredient(long userId, String ingredientName) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        return db.delete(
+                "PantryIngredients",
+                "UserID = ? AND IngredientName = ?",
+                new String[]{
+                        String.valueOf(userId),
+                        ingredientName
+                }
+        );
     }
 
     @Override

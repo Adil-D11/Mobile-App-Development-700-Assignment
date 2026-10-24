@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.util.Patterns;
 
+import android.content.SharedPreferences;
+
 public class LoginPage extends AppCompatActivity {
 
     private EditText Email;
@@ -49,14 +51,19 @@ public class LoginPage extends AppCompatActivity {
                 return;
             }
 
-            boolean isValidUser = dbHelper.verifyUser(email, password);
+            long userId = dbHelper.getUserId(email, password);
 
-            if (!isValidUser) {
+            if (userId == -1) {
                 Toast.makeText(this,
                         "Invalid email or password",
                         Toast.LENGTH_LONG).show();
                 return;
             }
+
+            SharedPreferences preferences =
+                    getSharedPreferences("SmartPantrySession", MODE_PRIVATE);
+
+            preferences.edit().putLong("UserID", userId).apply();
 
             Toast.makeText(this,
                     "Login successful!",

@@ -21,6 +21,9 @@ public class GenerateRecipe extends AppCompatActivity {
 
     private ArrayList<String> selectedIngredients = new ArrayList<>();
     private LinearLayout selectedIngredientContainer;
+    private CheckBox[] ingredientCheckboxes;
+    private DBHelper dbHelper;
+    private long userId;
 
     private void OpenActivity(Class activity){
         Intent intent = new Intent(this,activity);
@@ -57,6 +60,15 @@ public class GenerateRecipe extends AppCompatActivity {
                 return;
             }
 
+            long result = dbHelper.addIngredient(userId, ingredient);
+
+            if (result == -1) {
+                Toast.makeText(this,
+                        "Unable to add ingredient",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             selectedIngredients.add(ingredient);
             displaySelectedIngredients();
 
@@ -74,19 +86,152 @@ public class GenerateRecipe extends AppCompatActivity {
         });
     }
 
-    private void displaySelectedIngredients(){
-        selectedIngredientContainer.removeViews( 1, selectedIngredientContainer.getChildCount() - 1);
+    private void initIngredientCheckboxes() {
+        ingredientCheckboxes = new CheckBox[]{
+                findViewById(R.id.chkTomato),
+                findViewById(R.id.chkOnion),
+                findViewById(R.id.chkPotato),
+                findViewById(R.id.chkEggs),
+                findViewById(R.id.chkMilk),
+                findViewById(R.id.chkCheese),
+                findViewById(R.id.chkRice),
+                findViewById(R.id.chkPasta)
+        };
 
-        for (String ingredient : selectedIngredients){
+        for (CheckBox checkbox : ingredientCheckboxes) {
+            checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                String ingredient = buttonView.getText().toString();
+
+                if (isChecked) {
+                    if (!selectedIngredients.contains(ingredient)) {
+                        selectedIngredients.add(ingredient);
+                    }
+                } else {
+                    selectedIngredients.removeIf(
+                            item -> item.equalsIgnoreCase(ingredient)
+                    );
+                }
+
+                displaySelectedIngredients();
+            });
+        }
+    }
+
+
+
+    private void displaySelectedIngredients() {
+        selectedIngredientContainer.removeViews(
+                1, selectedIngredientContainer.getChildCount() - 1
+        );
+
+        for (String ingredient : selectedIngredients) {
+            // Create a row for each ingredient.
+            LinearLayout ingredientRow = new LinearLayout(this);
+            ingredientRow.setOrientation(LinearLayout.HORIZONTAL);
+            ingredientRow.setPadding(8, 8, 8, 8);
+            ingredientRow.setGravity(android.view.Gravity.CENTER_VERTICAL);
+
+            // Display the ingredient name.
             TextView ingredientText = new TextView(this);
             ingredientText.setText("- " + ingredient);
             ingredientText.setTextSize(18);
-            ingredientText.setPadding(8, 8, 8, 8);
+            ingredientText.setLayoutParams(
+                    new LinearLayout.LayoutParams(
+                            0,
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            1
+                    )
+            );
 
-            selectedIngredientContainer.addView(ingredientText);
+            // Create a button to remove the ingredient.
+            Button removeButton = new Button(this);
+            removeButton.setText("Remove");
+
+
+            removeButton.setOnClickListener(view -> {
+                int deleted = dbHelper.deleteIngredient(userId, ingredient);
+
+                // Remove it from the selected list even if it wasn't saved in the database.
+                selectedIngredients.removeIf(
+                        item -> item.equalsIgnoreCase(ingredient)
+                );
+
+                // Uncheck the matching checkbox, if there is one.
+                for (CheckBox checkbox : ingredientCheckboxes) {
+                    if (checkbox.getText().toString()
+                            .equalsIgnoreCase(ingredient)) {
+                        checkbox.setOnCheckedChangeListener(null);
+                        checkbox.setChecked(false);
+
+                        checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                            String name = buttonView.getText().toString();
+
+                            if (isChecked) {
+                                if (!selectedIngredients.contains(name)) {
+                                    selectedIngredients.add(name);
+                                }
+                            } else {
+                                selectedIngredients.removeIf(
+                                        item -> item.equalsIgnoreCase(name)
+                                );
+                            }
+
+                            displaySelectedIngredients();
+                        });
+
+                        break;
+                    }
+                }
+
+                displaySelectedIngredients();
+
+                if (deleted > 0) {
+                    Toast.makeText(this, ingredient + " removed",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, ingredient + " removed from selection",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+
+
+            ingredientRow.addView(ingredientText);
+            ingredientRow.addView(removeButton);
+
+            selectedIngredientContainer.addView(ingredientRow);
+        }
+    }
+
+    private void loadPantryIngredients() {
+        selectedIngredients.clear();
+
+        android.content.SharedPreferences preferences =
+                getSharedPreferences("SmartPantrySession", MODE_PRIVATE);
+
+        userId = preferences.getLong("UserID", -1);
+
+        if (userId == -1) {
+            Toast.makeText(this,
+                    "Please log in again",
+                    Toast.LENGTH_SHORT).show();
+            finish();
+            return;
         }
 
+        android.database.Cursor cursor =
+                dbHelper.getPantryIngredients(userId);
+
+        try {
+            while (cursor.moveToNext()) {
+                selectedIngredients.add(cursor.getString(1));
+            }
+        } finally {
+            cursor.close();
+        }
+
+        displaySelectedIngredients();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +242,9 @@ public class GenerateRecipe extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        dbHelper = new DBHelper(this);
         initRecipe();
+        loadPantryIngredients();
+        initIngredientCheckboxes();
     }
 }
