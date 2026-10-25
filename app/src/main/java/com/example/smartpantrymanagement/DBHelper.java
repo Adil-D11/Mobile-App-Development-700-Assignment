@@ -135,6 +135,92 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+
+    public boolean updateEmail(long userId, String currentPassword, String newEmail) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        // Verify the current password before changing the email.
+        try (Cursor cursor = db.rawQuery(
+                "SELECT PasswordHash FROM Users WHERE UserID = ?",
+                new String[]{String.valueOf(userId)})) {
+
+            if (!cursor.moveToFirst()) {
+                return false;
+            }
+
+            if (!verifyPassword(currentPassword, cursor.getString(0))) {
+                return false;
+            }
+        }
+
+        ContentValues values = new ContentValues();
+        values.put("Email", newEmail);
+
+        return db.update(
+                "Users",
+                values,
+                "UserID = ?",
+                new String[]{String.valueOf(userId)}
+        ) > 0;
+    }
+
+    public boolean updatePassword(long userId, String currentPassword, String newPassword) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        // Verify the current password before saving a new hash.
+        try (Cursor cursor = db.rawQuery(
+                "SELECT PasswordHash FROM Users WHERE UserID = ?",
+                new String[]{String.valueOf(userId)})) {
+
+            if (!cursor.moveToFirst()) {
+                return false;
+            }
+
+            if (!verifyPassword(currentPassword, cursor.getString(0))) {
+                return false;
+            }
+        }
+
+        ContentValues values = new ContentValues();
+        values.put("PasswordHash", hashPassword(newPassword));
+
+        return db.update(
+                "Users",
+                values,
+                "UserID = ?",
+                new String[]{String.valueOf(userId)}
+        ) > 0;
+    }
+
+    private boolean verifyPassword(String password, String storedPasswordHash) {
+        String[] parts = storedPasswordHash.split(":", 2);
+
+        if (parts.length != 2) {
+            return false;
+        }
+
+        try {
+            byte[] salt = Base64.decode(parts[0], Base64.NO_WRAP);
+            byte[] expectedHash = Base64.decode(parts[1], Base64.NO_WRAP);
+
+            PBEKeySpec spec = new PBEKeySpec(
+                    password.toCharArray(), salt, 120000, 256);
+
+            byte[] enteredPasswordHash = SecretKeyFactory
+                    .getInstance("PBKDF2WithHmacSHA256")
+                    .generateSecret(spec)
+                    .getEncoded();
+
+            spec.clearPassword();
+
+            return MessageDigest.isEqual(expectedHash, enteredPasswordHash);
+
+        } catch (GeneralSecurityException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+
     public long addIngredient(long userId, String ingredientName, String expiryDate) {
         SQLiteDatabase db = getWritableDatabase();
 

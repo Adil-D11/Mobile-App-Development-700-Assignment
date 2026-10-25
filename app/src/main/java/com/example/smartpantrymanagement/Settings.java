@@ -20,6 +20,8 @@ import android.widget.Toast;
 import android.content.SharedPreferences;
 import android.widget.Switch;
 
+import android.content.Intent;
+
 public class Settings extends AppCompatActivity {
 
     @Override
@@ -32,6 +34,22 @@ public class Settings extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        Button logoutButton = findViewById(R.id.signOutButton);
+
+        logoutButton.setOnClickListener(v -> {
+            SharedPreferences preferences = getSharedPreferences(
+                    "SmartPantrySession", MODE_PRIVATE);
+
+            preferences.edit().remove("UserID").apply();
+
+            Intent intent = new Intent(Settings.this, StartupPage.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            startActivity(intent);
+            finish();
+        });
+
         Button changeEmailButton = findViewById(R.id.changeEmailButton);
 
         changeEmailButton.setOnClickListener(view -> {
@@ -125,9 +143,31 @@ public class Settings extends AppCompatActivity {
                     return;
                 }
 
-                Toast.makeText(this, "Updated Email", Toast.LENGTH_LONG).show();
 
-                dialog.dismiss();
+                SharedPreferences session = getSharedPreferences(
+                        "SmartPantrySession", MODE_PRIVATE);
+                long userId = session.getLong("UserID", -1);
+
+                DBHelper dbHelper = new DBHelper(this);
+
+                try {
+                    boolean updated = userId != -1
+                            && dbHelper.updateEmail(userId, currentPassword, newEmail);
+
+                    if (updated) {
+                        Toast.makeText(this, "Email updated successfully",
+                                Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
+                    } else {
+                        Toast.makeText(this,
+                                "Incorrect current password or email not updated",
+                                Toast.LENGTH_LONG).show();
+                    }
+                } catch (android.database.sqlite.SQLiteConstraintException e) {
+                    newEmailInput.setError("This email address is already registered");
+                    newEmailInput.requestFocus();
+                }
+
             });
         });
         dialog.show();
@@ -186,9 +226,26 @@ public class Settings extends AppCompatActivity {
                     return;
                 }
 
-                Toast.makeText(this, "Updated Password", Toast.LENGTH_LONG).show();
 
-                dialog.dismiss();
+                SharedPreferences session = getSharedPreferences(
+                        "SmartPantrySession", MODE_PRIVATE);
+                long userId = session.getLong("UserID", -1);
+
+                DBHelper dbHelper = new DBHelper(this);
+
+                boolean updated = userId != -1
+                        && dbHelper.updatePassword(userId, currentPassword, newPassword);
+
+                if (updated) {
+                    Toast.makeText(this, "Password updated successfully",
+                            Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
+                } else {
+                    Toast.makeText(this,
+                            "Incorrect current password or password not updated",
+                            Toast.LENGTH_LONG).show();
+                }
+
             });
         });
         dialog.show();

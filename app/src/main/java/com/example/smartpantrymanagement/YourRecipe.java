@@ -57,7 +57,28 @@ public class YourRecipe extends AppCompatActivity {
                     "Chicken", "tortillas", "lettuce"),
 
             new Recipe("Avocado toast", "10 minutes",
-                    "Avocado", "bread")
+                    "Avocado", "bread"),
+
+            new Recipe("Creamy Chicken Pasta", "30 minutes",
+                    "Chicken", "Pasta", "Milk", "Cheese", "Onion"),
+
+            new Recipe("Chicken and Vegetable Rice", "30 minutes",
+                    "Chicken", "Rice", "Carrots", "Peas", "Onion"),
+
+            new Recipe("Cheesy Tomato Baked Potatoes", "40 minutes",
+                    "Potato", "Tomato", "Cheese", "Onion"),
+
+            new Recipe("Mashed Potatoes", "25 minutes",
+                    "Potato", "Milk"),
+
+            new Recipe("Chicken Sandwich", "15 minutes",
+                    "Chicken", "Bread", "Lettuce"),
+
+            new Recipe("Creamy Mushroom Pasta", "25 minutes",
+                    "Pasta", "Milk", "Cheese", "Mushrooms", "Garlic"),
+
+            new Recipe("Vegetable Omelette", "15 minutes",
+                    "Eggs", "Tomato", "Onion", "Bell pepper", "Cheese")
     );
 
     private DBHelper dbHelper;
@@ -107,7 +128,7 @@ public class YourRecipe extends AppCompatActivity {
 
             for (String ingredient : recipe.ingredients) {
                 if (!available.contains(
-                        ingredient.toLowerCase(Locale.ROOT))) {
+                        ingredient.trim().toLowerCase(Locale.ROOT))) {
                     hasAllIngredients = false;
                     break;
                 }
