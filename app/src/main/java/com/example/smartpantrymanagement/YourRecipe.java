@@ -55,6 +55,13 @@ public class YourRecipe extends AppCompatActivity {
         Button doneButton = findViewById(R.id.DoneRecipebtn);
 
         doneButton.setOnClickListener(view -> {
+            // Return to Previous Recipes when viewing saved history.
+            if (getIntent().getBooleanExtra("viewingHistory", false)) {
+                finish();
+                return;
+            }
+
+            // Otherwise, return to Generate Recipe as usual.
             Intent intent = new Intent(this, GenerateRecipe.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

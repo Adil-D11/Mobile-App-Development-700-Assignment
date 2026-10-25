@@ -201,21 +201,14 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/IngredientChkbox5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp">
-
-
-
-        </LinearLayout>
-
         <ScrollView
             android:id="@+id/selectedIngredientsScroll"
             android:layout_width="match_parent"
-            android:layout_height="250dp">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="false"
+            android:scrollbars="vertical"
+            android:nestedScrollingEnabled="true">
 
             <LinearLayout
                 android:id="@+id/selectedIngredientsContainer"

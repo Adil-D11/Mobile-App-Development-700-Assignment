@@ -17,6 +17,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import android.content.SharedPreferences;
+import android.widget.Switch;
+
 public class Settings extends AppCompatActivity {
 
     @Override
@@ -39,6 +42,31 @@ public class Settings extends AppCompatActivity {
 
         changePasswordButton.setOnClickListener(view -> {
             showChangePasswordDialog();
+        });
+
+        Switch expirySwitch = findViewById(R.id.expirySwitch);
+
+        SharedPreferences preferences = getSharedPreferences(
+                "SmartPantrySettings",
+                MODE_PRIVATE
+        );
+
+        // Load the user's saved preference.
+        // Default to enabled the first time.
+        expirySwitch.setChecked(
+                preferences.getBoolean("ExpiryNotificationsEnabled", true)
+        );
+
+        expirySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferences.edit()
+                    .putBoolean("ExpiryNotificationsEnabled", isChecked)
+                    .apply();
+
+            String message = isChecked
+                    ? "Expiry notifications enabled"
+                    : "Expiry notifications disabled";
+
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         });
 
 

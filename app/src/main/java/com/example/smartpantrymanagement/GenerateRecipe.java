@@ -17,6 +17,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import java.util.Calendar;
+import java.util.Locale;
+
+import android.database.Cursor;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
+
 public class GenerateRecipe extends AppCompatActivity {
 
     private ArrayList<String> selectedIngredients = new ArrayList<>();
@@ -60,19 +71,7 @@ public class GenerateRecipe extends AppCompatActivity {
                 return;
             }
 
-            long result = dbHelper.addIngredient(userId, ingredient);
-
-            if (result == -1) {
-                Toast.makeText(this,
-                        "Unable to add ingredient",
-                        Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            selectedIngredients.add(ingredient);
-            displaySelectedIngredients();
-
-            Searchbar.setText("");
+            showExpiryDateDialog(ingredient);
         });
 
 
@@ -91,6 +90,96 @@ public class GenerateRecipe extends AppCompatActivity {
         });
     }
 
+    private void showExpiryDateDialog(String ingredient) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Ingredient Expiry Date");
+        builder.setMessage("Would you like to enter an expiry date for "
+                + ingredient + "?");
+
+        builder.setPositiveButton("Choose Date", (dialog, which) -> {
+            Calendar calendar = Calendar.getInstance();
+
+            DatePickerDialog datePicker = new DatePickerDialog(
+                    this,
+                    (view, year, month, dayOfMonth) -> {
+                        String expiryDate = String.format(
+                                Locale.US,
+                                "%04d-%02d-%02d",
+                                year, month + 1, dayOfMonth
+                        );
+
+                        saveIngredient(ingredient, expiryDate);
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+            );
+
+            datePicker.getDatePicker().setMinDate(
+                    System.currentTimeMillis() - 1000
+            );
+
+            datePicker.show();
+        });
+
+        builder.setNegativeButton("Skip", (dialog, which) ->
+                saveIngredient(ingredient, null));
+
+        builder.setNeutralButton("Cancel", (dialog, which) -> {
+            // Do not add the ingredient if the user cancels.
+        });
+
+        builder.show();
+    }
+    private void saveIngredient(String ingredient, String expiryDate) {
+        long result = dbHelper.addIngredient(userId, ingredient, expiryDate);
+
+        if (result == -1) {
+            Toast.makeText(
+                    this,
+                    "Unable to add ingredient",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return;
+        }
+
+        Cursor cursor = dbHelper.getPantryIngredients(userId);
+
+        if (cursor != null) {
+            try {
+                while (cursor.moveToNext()) {
+                    if (cursor.getString(1).equalsIgnoreCase(ingredient)) {
+                        long ingredientId = cursor.getLong(0);
+
+                        ExpiryNotificationScheduler.scheduleNotification(
+                                this,
+                                ingredientId,
+                                ingredient,
+                                expiryDate
+                        );
+
+                        break;
+                    }
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+
+        selectedIngredients.add(ingredient);
+        displaySelectedIngredients();
+
+        EditText searchbar = findViewById(R.id.editSearchbar);
+        searchbar.setText("");
+
+        Toast.makeText(
+                this,
+                "Ingredient added",
+                Toast.LENGTH_SHORT
+        ).show();
+    }
+
     private void initIngredientCheckboxes() {
         ingredientCheckboxes = new CheckBox[]{
                 findViewById(R.id.chkTomato),
@@ -105,19 +194,17 @@ public class GenerateRecipe extends AppCompatActivity {
 
         for (CheckBox checkbox : ingredientCheckboxes) {
             checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                String ingredient = buttonView.getText().toString();
+                String ingredient = checkbox.getText().toString();
 
                 if (isChecked) {
                     if (!selectedIngredients.contains(ingredient)) {
-                        selectedIngredients.add(ingredient);
+                        showExpiryDateDialog(ingredient);
                     }
                 } else {
-                    selectedIngredients.removeIf(
-                            item -> item.equalsIgnoreCase(ingredient)
-                    );
+                    selectedIngredients.remove(ingredient);
+                    dbHelper.deleteIngredient(userId, ingredient);
+                    displaySelectedIngredients();
                 }
-
-                displaySelectedIngredients();
             });
         }
     }
@@ -248,6 +335,17 @@ public class GenerateRecipe extends AppCompatActivity {
             return insets;
         });
         dbHelper = new DBHelper(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            requestPermissions(
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                    100
+            );
+        }
+
         initRecipe();
         loadPantryIngredients();
         initIngredientCheckboxes();

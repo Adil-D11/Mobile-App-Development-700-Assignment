@@ -16,7 +16,7 @@ import java.security.MessageDigest;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "SmartPantry.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public DBHelper(Context context){super(context, DATABASE_NAME, null, DATABASE_VERSION);}
 
@@ -33,6 +33,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     "IngredientID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "UserID INTEGER NOT NULL, " +
                     "IngredientName TEXT NOT NULL," +
+                    "ExpiryDate TEXT, " +
                     "UNIQUE(UserId, IngredientName)," +
                     "FOREIGN KEY(UserID) REFERENCES Users(UserID) " +
                     "ON DELETE CASCADE)";
@@ -134,12 +135,18 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public long addIngredient(long userId, String ingredientName) {
+    public long addIngredient(long userId, String ingredientName, String expiryDate) {
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put("UserID", userId);
         values.put("IngredientName", ingredientName);
+
+        if (expiryDate == null || expiryDate.trim().isEmpty()) {
+            values.putNull("ExpiryDate");
+        } else {
+            values.put("ExpiryDate", expiryDate);
+        }
 
         return db.insert("PantryIngredients", null, values);
     }
@@ -148,7 +155,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
 
         return db.rawQuery(
-                "SELECT IngredientID, IngredientName " +
+                "SELECT IngredientID, IngredientName, ExpiryDate " +
                         "FROM PantryIngredients WHERE UserID = ? " +
                         "ORDER BY IngredientName COLLATE NOCASE",
                 new String[]{String.valueOf(userId)}
@@ -171,6 +178,25 @@ public class DBHelper extends SQLiteOpenHelper {
     public long saveRecipeHistory(long userId, String recipeName, String ingredients) {
         SQLiteDatabase db = getWritableDatabase();
 
+        // Check whether this user has already saved this recipe.
+        Cursor cursor = db.rawQuery(
+                "SELECT RecipeID FROM RecipeHistory " +
+                        "WHERE UserID = ? AND RecipeName = ? COLLATE NOCASE",
+                new String[]{
+                        String.valueOf(userId),
+                        recipeName
+                }
+        );
+
+        try {
+            if (cursor.moveToFirst()) {
+                // Return the existing ID instead of inserting a duplicate.
+                return cursor.getLong(0);
+            }
+        } finally {
+            cursor.close();
+        }
+
         ContentValues values = new ContentValues();
         values.put("UserID", userId);
         values.put("RecipeName", recipeName);
@@ -183,10 +209,11 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
 
         return db.rawQuery(
-                "SELECT RecipeID, RecipeName, Ingredients " +
+                "SELECT MIN(RecipeID) AS RecipeID, RecipeName, Ingredients " +
                         "FROM RecipeHistory " +
                         "WHERE UserID = ? " +
-                        "ORDER BY RecipeID DESC",
+                        "GROUP BY RecipeName COLLATE NOCASE " +
+                        "ORDER BY MAX(RecipeID) DESC",
                 new String[]{String.valueOf(userId)}
         );
     }
@@ -207,8 +234,13 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+        if (oldVersion < 2) {
+            db.execSQL(
+                    "ALTER TABLE PantryIngredients ADD COLUMN ExpiryDate TEXT"
+            );
+        }
     }
 
 }
