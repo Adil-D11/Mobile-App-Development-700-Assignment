@@ -42,6 +42,7 @@ public class Settings extends AppCompatActivity {
 
             preferences.edit().remove("UserID").apply();
 
+            // allows user to navigate back to startup page
             Intent intent = new Intent(Settings.this, StartupPage.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -70,7 +71,6 @@ public class Settings extends AppCompatActivity {
         );
 
         // Load the user's saved preference.
-        // Default to enabled the first time.
         expirySwitch.setChecked(
                 preferences.getBoolean("ExpiryNotificationsEnabled", true)
         );
@@ -80,6 +80,7 @@ public class Settings extends AppCompatActivity {
                     .putBoolean("ExpiryNotificationsEnabled", isChecked)
                     .apply();
 
+            // if its on a small message will say enabled and if its off it will say disabled
             String message = isChecked
                     ? "Expiry notifications enabled"
                     : "Expiry notifications disabled";
@@ -90,23 +91,28 @@ public class Settings extends AppCompatActivity {
 
     }
 
+    // user can change email but enter password first
     private void showChangeEmailDialog(){
         LinearLayout dialogLayout = new LinearLayout(this);
         dialogLayout.setOrientation(LinearLayout.VERTICAL);
 
+        // creates like a pop up for user to enter their details
         int padding = (int) (20 * getResources().getDisplayMetrics().density);
         dialogLayout.setPadding(padding, padding, padding, 0);
 
+        // user must enter their current password
         EditText currentPasswordInput = new EditText(this);
         currentPasswordInput.setHint("Current Password");
         currentPasswordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         dialogLayout.addView(currentPasswordInput);
 
+        //enter in new email
         EditText newEmailInput = new EditText(this);
         newEmailInput.setHint("New Email Address");
         newEmailInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         dialogLayout.addView(newEmailInput);
 
+        // confirm new email
         EditText confirmEmailInput = new EditText(this);
         confirmEmailInput.setHint("Confirm New Email Address");
         confirmEmailInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
@@ -148,6 +154,7 @@ public class Settings extends AppCompatActivity {
                         "SmartPantrySession", MODE_PRIVATE);
                 long userId = session.getLong("UserID", -1);
 
+                // creates DBHelper to for update
                 DBHelper dbHelper = new DBHelper(this);
 
                 try {

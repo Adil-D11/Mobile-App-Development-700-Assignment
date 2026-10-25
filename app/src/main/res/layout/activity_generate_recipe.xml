@@ -66,6 +66,7 @@
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
+            <!--Puts in an image-->
             <ImageView
                 android:id="@+id/searchIcon"
                 android:layout_width="24dp"
@@ -105,6 +106,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="20dp">
 
+        <!--Displays a checkbox for the user to tick-->
         <CheckBox
             android:id="@+id/chkTomato"
             android:layout_width="wrap_content"
@@ -201,6 +203,7 @@
 
         </LinearLayout>
 
+        <!--A scrollview to allow the users to read the ingredients theu selected-->
         <ScrollView
             android:id="@+id/selectedIngredientsScroll"
             android:layout_width="match_parent"

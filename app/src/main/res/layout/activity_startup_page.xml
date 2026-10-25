@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     tools:context=".StartupPage">
 
-
+    <!--Created the heading-->
     <TextView
         android:id="@+id/BodyTextView"
         android:layout_width="match_parent"
@@ -22,6 +22,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
 
+    <!--Allows to insert an image-->
     <ImageView
         android:id="@+id/LoginRegImg"
         android:layout_width="380dp"
@@ -33,6 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/BodyTextView"/>
 
+    <!--Displays components in a vertical layout-->
     <LinearLayout
         android:id="@+id/Login"
         android:layout_width="300dp"
@@ -68,6 +70,7 @@
             android:padding="16dp"
             />
 
+        <!--Added buttons-->
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="130dp"
@@ -92,7 +95,7 @@
 
         <Button
             android:id="@+id/btnReg"
-            android:layout_width="130dp"
+            android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_marginTop="-15dp"
             android:text="Register"

@@ -35,11 +35,14 @@ public class LoginPage extends AppCompatActivity {
         Email = findViewById(R.id.editEmail);
         Password = findViewById(R.id.editPassword);
 
+        // checks if user tapped the button
         LoginBtn.setOnClickListener(view->{
 
+            //gets user input
             String email = Email.getText().toString().trim();
             String password = Password.getText().toString();
 
+            //validation
             if(email.isEmpty() || password.isEmpty()){
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 return;
@@ -60,11 +63,13 @@ public class LoginPage extends AppCompatActivity {
                 return;
             }
 
+            //saves the current users ID
             SharedPreferences preferences =
                     getSharedPreferences("SmartPantrySession", MODE_PRIVATE);
 
             preferences.edit().putLong("UserID", userId).apply();
 
+            //shows a message at the bottom screen that it was successful
             Toast.makeText(this,
                     "Login successful!",
                     Toast.LENGTH_SHORT).show();

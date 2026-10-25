@@ -21,6 +21,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public DBHelper(Context context){super(context, DATABASE_NAME, null, DATABASE_VERSION);}
 
 
+    // Created the tables with fields
     private static final String CREATE_TABLE_USERS =
             "CREATE TABLE Users (" +
                     "UserID INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -48,7 +49,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     "FOREIGN KEY(UserID) REFERENCES Users(UserID) " +
                     "ON DELETE CASCADE)";
 
-
+//Handles creating a new users account and storing details in database
     public long registerUser(String username, String email, String password) {
         String passwordHash = hashPassword(password);
 
@@ -64,17 +65,21 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
 
+    //Manages the logging in by checking email and password
     public long getUserId(String email, String password) {
         SQLiteDatabase db = getReadableDatabase();
 
+        //searches for the user in database
         try (Cursor cursor = db.rawQuery(
                 "SELECT UserID, PasswordHash FROM Users WHERE Email = ?",
                 new String[]{email})) {
 
+            //checks if user exists
             if (!cursor.moveToFirst()) {
                 return -1;
             }
 
+            //retrives the details if found
             long userId = cursor.getLong(0);
             String storedPasswordHash = cursor.getString(1);
             String[] parts = storedPasswordHash.split(":", 2);
@@ -86,6 +91,7 @@ public class DBHelper extends SQLiteOpenHelper {
             byte[] salt = Base64.decode(parts[0], Base64.NO_WRAP);
             byte[] expectedHash = Base64.decode(parts[1], Base64.NO_WRAP);
 
+            // verifies password
             PBEKeySpec spec = new PBEKeySpec(
                     password.toCharArray(), salt, 120000, 256);
 
@@ -112,6 +118,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
 
+    //Hases the users password before storing in database
     private String hashPassword(String password) {
         try {
             byte[] salt = new byte[16];
@@ -164,10 +171,11 @@ public class DBHelper extends SQLiteOpenHelper {
         ) > 0;
     }
 
+    // The user can update their email
     public boolean updatePassword(long userId, String currentPassword, String newPassword) {
         SQLiteDatabase db = getWritableDatabase();
 
-        // Verify the current password before saving a new hash.
+        // Verifies the current password before saving a new hash.
         try (Cursor cursor = db.rawQuery(
                 "SELECT PasswordHash FROM Users WHERE UserID = ?",
                 new String[]{String.valueOf(userId)})) {
@@ -192,6 +200,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ) > 0;
     }
 
+    //Checks if password entered by user matches the hashed password
     private boolean verifyPassword(String password, String storedPasswordHash) {
         String[] parts = storedPasswordHash.split(":", 2);
 
@@ -221,6 +230,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
+    // Adds a new ingredient to database
     public long addIngredient(long userId, String ingredientName, String expiryDate) {
         SQLiteDatabase db = getWritableDatabase();
 
@@ -237,6 +247,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.insert("PantryIngredients", null, values);
     }
 
+    // displays the ingredients from the database
     public Cursor getPantryIngredients(long userId) {
         SQLiteDatabase db = getReadableDatabase();
 
@@ -248,6 +259,7 @@ public class DBHelper extends SQLiteOpenHelper {
         );
     }
 
+    // removes the ingredient from the list
     public int deleteIngredient(long userId, String ingredientName) {
         SQLiteDatabase db = getWritableDatabase();
 
@@ -261,10 +273,11 @@ public class DBHelper extends SQLiteOpenHelper {
         );
     }
 
+    // saves the generated recipe page and displays it in the previous recipe page
     public long saveRecipeHistory(long userId, String recipeName, String ingredients) {
         SQLiteDatabase db = getWritableDatabase();
 
-        // Check whether this user has already saved this recipe.
+        // Check whether this user has already saved this recipe
         Cursor cursor = db.rawQuery(
                 "SELECT RecipeID FROM RecipeHistory " +
                         "WHERE UserID = ? AND RecipeName = ? COLLATE NOCASE",
@@ -276,7 +289,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         try {
             if (cursor.moveToFirst()) {
-                // Return the existing ID instead of inserting a duplicate.
+                //Return the existing ID instead of inserting a duplicate
                 return cursor.getLong(0);
             }
         } finally {

@@ -55,6 +55,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/expirySwitch" />
 
+    <!--This is a toggle button for the user to switch between on or off notifications-->
     <Switch
         android:id="@+id/expirySwitch"
         android:layout_width="wrap_content"

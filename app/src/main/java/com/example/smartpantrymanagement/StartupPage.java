@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class StartupPage extends AppCompatActivity {
 
+    //Allows for navigation when button is pressed
     private void OpenActivity(Class activity){
         Intent intent = new Intent(this,activity);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

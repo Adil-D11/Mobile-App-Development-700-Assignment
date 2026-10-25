@@ -27,6 +27,7 @@ public class YourRecipe extends AppCompatActivity {
         String time;
         List<String> ingredients;
 
+        //initializer
         Recipe(String name, String time, String... ingredients) {
             this.name = name;
             this.time = time;
@@ -34,6 +35,7 @@ public class YourRecipe extends AppCompatActivity {
         }
     }
 
+    //predefined recipes
     private final List<Recipe> recipes = Arrays.asList(
             new Recipe("Tomato Cheese Pasta", "20 minutes",
                     "Tomato", "Cheese", "Pasta"),
@@ -84,17 +86,18 @@ public class YourRecipe extends AppCompatActivity {
     private DBHelper dbHelper;
     private long userId;
 
+    //The Done button on page
     private void initRecipeGen() {
         Button doneButton = findViewById(R.id.DoneRecipebtn);
 
         doneButton.setOnClickListener(view -> {
-            // Return to Previous Recipes when viewing saved history.
+            // returns to Previous Recipes when viewing saved history
             if (getIntent().getBooleanExtra("viewingHistory", false)) {
                 finish();
                 return;
             }
 
-            // Otherwise, return to Generate Recipe as usual.
+            // returns to Generate Recipe as usual
             Intent intent = new Intent(this, GenerateRecipe.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
@@ -102,12 +105,14 @@ public class YourRecipe extends AppCompatActivity {
         });
     }
 
+    // displays recipes that match the ingredients
     private void displayMatchingRecipe() {
         TextView recipeName = findViewById(R.id.recipeName);
         TextView recipeTime = findViewById(R.id.recipeTime);
         LinearLayout ingredientsContainer =
                 findViewById(R.id.IngredientsContainer);
 
+        //gets the selected ingredients from previous screen
         ArrayList<String> availableIngredients =
                 getIntent().getStringArrayListExtra("selectedIngredients");
 
@@ -117,10 +122,12 @@ public class YourRecipe extends AppCompatActivity {
 
         Set<String> available = new HashSet<>();
 
+        // prepares the ingredients entered by users to be compared to the ones in the database
         for (String ingredient : availableIngredients) {
             available.add(ingredient.trim().toLowerCase(Locale.ROOT));
         }
 
+        // compares ingredients
         Recipe matchedRecipe = null;
 
         for (Recipe recipe : recipes) {
@@ -142,6 +149,7 @@ public class YourRecipe extends AppCompatActivity {
 
         ingredientsContainer.removeAllViews();
 
+        // if no recipe matches users ingredients
         if (matchedRecipe == null) {
             recipeName.setText("No matching recipes found");
             recipeTime.setText(
@@ -150,6 +158,7 @@ public class YourRecipe extends AppCompatActivity {
             return;
         }
 
+        // if ingredients matches it displays
         recipeName.setText(matchedRecipe.name);
         recipeTime.setText("Preparation time: " + matchedRecipe.time);
 
