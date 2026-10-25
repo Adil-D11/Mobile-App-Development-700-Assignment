@@ -24,8 +24,8 @@
 
     <ImageView
         android:id="@+id/LoginRegImg"
-        android:layout_width="370dp"
-        android:layout_height="170dp"
+        android:layout_width="380dp"
+        android:layout_height="190dp"
         android:src="@drawable/startup_logo_2"
         android:scaleType="fitCenter"
         android:layout_marginTop="-21dp"

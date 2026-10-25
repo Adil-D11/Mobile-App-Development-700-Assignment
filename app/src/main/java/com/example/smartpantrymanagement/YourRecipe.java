@@ -45,7 +45,19 @@ public class YourRecipe extends AppCompatActivity {
                     "Potato", "Milk", "Cheese"),
 
             new Recipe("Tomato Omelette", "10 minutes",
-                    "Tomato", "Eggs")
+                    "Tomato", "Eggs"),
+
+            new Recipe("Chicken stir-fry", "30 minutes",
+                    "Chicken", "bell pepper", "carrots", "soy sauce"),
+
+            new Recipe("Vegetable soup", "45 minutes",
+                    "Carrots", "cabbage", "vegetable stock"),
+
+            new Recipe("Chicken wraps", "25 minutes",
+                    "Chicken", "tortillas", "lettuce"),
+
+            new Recipe("Avocado toast", "10 minutes",
+                    "Avocado", "bread")
     );
 
     private DBHelper dbHelper;
